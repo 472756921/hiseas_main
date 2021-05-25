@@ -7,7 +7,7 @@ const adminUser = [
         head: 'XXX',
         permissions: 'admin',
         text: '你好',
-        ruleList: [],
+        ruleList: [{ permissions: 'admin', pathList: ['/'] }],
         id: 123,
         Authorization: 'xxx',
     },

@@ -1,4 +1,5 @@
 import { Layout, ConfigProvider } from 'antd';
+import * as Sentry from '@sentry/react';
 import zhCN from 'antd/es/locale-provider/zh_CN';
 import { connect } from 'umi';
 import Page404 from '@/pages/404';
@@ -30,40 +31,50 @@ const App = ({ children, location, dispatch }) => {
             </ConfigProvider>
         );
     }
-    const { ruleList } = JSON.parse(sessionStorage.getItem('userInfo'));
+    const { ruleList, permissions } = JSON.parse(
+        sessionStorage.getItem('userInfo'),
+    );
     const pathList = ruleList
         .map((it) => {
             return it.pathList;
         })
         .flat();
     return (
-        <ConfigProvider locale={zhCN}>
-            <Spin />
-            <Layout style={{ minHeight: '100vh' }}>
-                <Menus location={location} ruleList={ruleList} />
-                <Layout>
-                    <Head />
-                    <br />
-                    <Content style={{ margin: '0 16px' }}>
-                        {/* <Breadcrumbs /> */}
-                        <div
-                            style={{
-                                padding: 24,
-                                background: '#fff',
-                                minHeight: 360,
-                            }}
-                        >
-                            {pathList.indexOf(pathname) === -1 ? (
-                                <Page404 index={pathList[0]} />
-                            ) : (
-                                children
-                            )}
-                        </div>
-                    </Content>
-                    <Footer />
+        <Sentry.ErrorBoundary fallback={'An error has occurred'}>
+            {/* <button onClick={methodDoesNotExist}>Break the world</button> */}
+            <ConfigProvider locale={zhCN}>
+                <Spin />
+                <Layout style={{ minHeight: '100vh' }}>
+                    <Menus
+                        location={location}
+                        ruleList={ruleList}
+                        permissions={permissions}
+                    />
+                    <Layout>
+                        <Head />
+                        <br />
+                        <Content style={{ margin: '0 16px' }}>
+                            {/* <Breadcrumbs /> */}
+                            <div
+                                style={{
+                                    padding: 24,
+                                    background: '#fff',
+                                    minHeight: 360,
+                                }}
+                            >
+                                {pathList.indexOf(pathname) === -1 &&
+                                permissions !== 'admin' ? (
+                                    <Page404 index={pathList[0]} />
+                                ) : (
+                                    children
+                                )}
+                            </div>
+                        </Content>
+                        <Footer />
+                    </Layout>
                 </Layout>
-            </Layout>
-        </ConfigProvider>
+            </ConfigProvider>
+        </Sentry.ErrorBoundary>
     );
 };
 

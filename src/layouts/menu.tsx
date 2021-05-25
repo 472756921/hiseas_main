@@ -25,9 +25,9 @@ export default class Menus extends Component {
 
         let defMid = '';
         const menus = menusData.map((it, i) => {
-            it.path === pathName ? (defMid = it.id) : '';
+            it?.path === pathName ? (defMid = it.id) : '';
 
-            if (it.children) {
+            if (it?.children) {
                 return (
                     <SubMenu
                         key={it.id}
@@ -42,7 +42,7 @@ export default class Menus extends Component {
                     </SubMenu>
                 );
             }
-            if (it.show) {
+            if (it?.show) {
                 return (
                     <Menu.Item key={it.id}>
                         <Link to={it.path}>
@@ -58,26 +58,29 @@ export default class Menus extends Component {
     };
 
     componentWillMount() {
-        const { ruleList } = this.props;
+        const { ruleList, permissions } = this.props;
         const Um = DeepClone(menus);
-
+        if (permissions === 'admin') {
+            this.setState({
+                menu: this.createMenus(Um),
+            });
+            return false;
+        }
         const rmenus = ruleList.map((it) => {
             const tm = Um.find((ij) => ij.path === `/${it.permissions}`);
-            if (!it.pathList.length) {
+            if (!it?.pathList.length) {
                 tm.children = null;
                 return tm;
             }
-            if (tm.children.length) {
+            if (tm?.children.length) {
                 tm.children.map((ij, index) => {
                     if (it.pathList.find((im) => im.indexOf(ij.path) === -1)) {
                         tm.children.splice(index, 1);
                     }
                 });
-                console.log('tm :>> ', tm);
             }
             return tm;
         });
-        console.log('object :>> ', rmenus);
         this.setState({
             menu: this.createMenus(rmenus),
         });

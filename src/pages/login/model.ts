@@ -20,6 +20,10 @@ export default {
                     data ? JSON.stringify(data) : '',
                 );
                 const indexPath = data.ruleList[0].permissions;
+                if (indexPath === 'admin') {
+                    history.push('/');
+                    return false;
+                }
                 history.push('/' + indexPath);
             }
         },
