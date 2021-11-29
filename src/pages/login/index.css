@@ -1,31 +1,26 @@
-.bk{
-    background: -webkit-linear-gradient(left top, #360033 , #0b8793); /* Safari 5.1 - 6.0 */
-    background: -o-linear-gradient(left top, #360033, #0b8793); /* Opera 11.1 - 12.0 */
-    background: -moz-linear-gradient(left top, #360033, #0b8793); /* Firefox 3.6 - 15 */
-    background: linear-gradient(to left top, #360033 , #0b8793); /* 标准的语法 */
+.bk {
+    background: url('../../assets/img/bk/loginbk.png') no-repeat;
+    background-size: cover;
     height: 100vh;
-  }
-  .form{
-    width: 400px;
-    border: 1px solid #eee;
-    padding: 10px 20px;
-    border-radius: 10px;
+}
+.form {
+    width: 450px;
+    height: 580px;
+    padding: 64px 40px;
+    border-radius: 32px;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.8);
+    top: 50%;
+    transform: translateY(-50%);
     position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    margin: auto;
-    height: 400px;
-    box-shadow: 0 0 100px rgba(0,0,0,.08);
-    background: #fff;
-  }
-  .title{
-    color: #666;
-    padding: 16px;
-    font-size: 18px;
-    text-align: center;
-  }
-  .refensBtn{
-      margin-left: 30px;
-  }
+    margin-left: 14%;
+}
+.title {
+    color: #252a2e;
+    font-size: 34px;
+    padding-bottom: 60px;
+    font-family: 'pingfang_bold';
+}
+.refensBtn {
+    margin-left: 30px;
+}

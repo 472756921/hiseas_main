@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Spin } from 'antd';
-import Styles from './index.css';
+import Styles from './index.less';
 
 export let showLoading;
 export let hideLoading;

@@ -24,7 +24,7 @@ export default class Menus extends Component {
         menusData = JSON.parse(JSON.stringify(menusData));
 
         let defMid = '';
-        const menus = menusData.map((it, i) => {
+        const menus = menusData.map((it) => {
             it?.path === pathName ? (defMid = it.id) : '';
 
             if (it?.children) {

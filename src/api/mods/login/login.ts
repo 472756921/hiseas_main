@@ -19,8 +19,8 @@ export class Resp {
 }
 
 export async function request(params: Params) {
-    return pontFetch('/apiM/user/login', {
-        ...params,
-        method: 'post',
+    return pontFetch('/auth/login', {
+        method: 'POST',
+        data: params,
     });
 }

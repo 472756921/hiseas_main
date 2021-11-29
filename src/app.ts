@@ -1,18 +1,36 @@
-import { useState } from 'react';
-import * as Sentry from '@sentry/react';
-import { Integrations } from '@sentry/tracing';
+import '@/api';
+import { registerMicroApps, start } from 'qiankun';
 
-// Sentry.init({
-//     dsn: 'http://9520c4d8bda446bea9126067f385f81d@localhost:8000/sentry/2',
-//     integrations: [new Integrations.BrowserTracing()],
-//     tracesSampleRate: 1.0,
-// });
+window.test = 123;
 
-export function useQiankunStateForSlave() {
-    const [masterState, setMasterState] = useState({});
+registerMicroApps([
+    {
+        name: 'CRM', // app name registered
+        entry: 'http://localhost:8003',
+        container: '#mainroot',
+        activeRule: '/micro_frontend_template',
+    },
+    {
+        name: 'ERP',
+        entry: 'https://fat-adm.local.hiseas.com',
+        container: '#mainroot',
+        activeRule: '/hiseas_micro_research',
+    },
+]);
 
-    return {
-        masterState,
-        setMasterState,
-    };
-}
+start({
+    prefetch: false,
+    singular: true,
+    fetch: window.fetch,
+    sandbox: { strictStyleIsolation: true },
+    excludeAssetFilter: (assetUrl) => {
+        const whiteList = [];
+        const whiteWords = ['baidu', 'map', 'mapopen'];
+        if (whiteList.includes(assetUrl)) {
+            return true;
+        }
+        return whiteWords.some((w) => {
+            return assetUrl.includes(w);
+        });
+    },
+});

@@ -1,12 +1,13 @@
 import { Layout, ConfigProvider } from 'antd';
-import * as Sentry from '@sentry/react';
+// import * as Sentry from '@sentry/react';
 import zhCN from 'antd/es/locale-provider/zh_CN';
 import { connect } from 'umi';
+import { Link } from 'react-router-dom';
 import Page404 from '@/pages/404';
 import Menus from './menu';
+import { menus } from '../config/menu';
 import Head from './head';
 import Footer from './footer';
-// import Breadcrumbs from './breadcrumbs';
 import { openPages } from '../config/system';
 import PropTypes from 'prop-types';
 import { withRouter } from 'umi';
@@ -23,6 +24,16 @@ const App = ({ children, location, dispatch }) => {
         history.push('/login');
         return null;
     }
+    const isNot404 = menus.filter((it) => it.path.indexOf(pathname) !== -1)
+        .length;
+
+    if (!isNot404 && pathname !== '/login') {
+        return (
+            <ConfigProvider locale={zhCN}>
+                <Page404 />
+            </ConfigProvider>
+        );
+    }
     if (openPages && openPages.includes(pathname)) {
         return (
             <ConfigProvider locale={zhCN}>
@@ -31,50 +42,29 @@ const App = ({ children, location, dispatch }) => {
             </ConfigProvider>
         );
     }
-    const { ruleList, permissions } = JSON.parse(
-        sessionStorage.getItem('userInfo'),
-    );
-    const pathList = ruleList
-        .map((it) => {
-            return it.pathList;
-        })
-        .flat();
+
     return (
-        <Sentry.ErrorBoundary fallback={'An error has occurred'}>
-            {/* <button onClick={methodDoesNotExist}>Break the world</button> */}
-            <ConfigProvider locale={zhCN}>
-                <Spin />
-                <Layout style={{ minHeight: '100vh' }}>
-                    <Menus
-                        location={location}
-                        ruleList={ruleList}
-                        permissions={permissions}
-                    />
-                    <Layout>
-                        <Head />
-                        <br />
-                        <Content style={{ margin: '0 16px' }}>
-                            {/* <Breadcrumbs /> */}
-                            <div
-                                style={{
-                                    padding: 24,
-                                    background: '#fff',
-                                    minHeight: 360,
-                                }}
-                            >
-                                {pathList.indexOf(pathname) === -1 &&
-                                permissions !== 'admin' ? (
-                                    <Page404 index={pathList[0]} />
-                                ) : (
-                                    children
-                                )}
-                            </div>
-                        </Content>
-                        <Footer />
-                    </Layout>
+        <ConfigProvider locale={zhCN}>
+            <Spin />
+            <Layout style={{ minHeight: '100vh' }}>
+                <Head />
+                <Layout>
+                    <Content>
+                        <div
+                            id="con"
+                            style={{
+                                background: '#fff',
+                                minHeight: '100%',
+                                height: '100%',
+                            }}
+                        >
+                            {children}
+                        </div>
+                    </Content>
+                    <Footer />
                 </Layout>
-            </ConfigProvider>
-        </Sentry.ErrorBoundary>
+            </Layout>
+        </ConfigProvider>
     );
 };
 

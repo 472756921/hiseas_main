@@ -1,8 +1,8 @@
-import request from 'umi-request';
-import { RequestMethod } from 'umi-request';
+import request, { RequestMethod } from 'umi-request';
+import { history } from 'umi';
 import qs from 'qs';
 import { notification, message } from 'antd';
-import { apiPreff } from '../config/system';
+import { apiPreff, proxyPreff } from '../config/system';
 import { showLoading, hideLoading } from '@/layouts/spin';
 
 interface reqOptions {
@@ -31,19 +31,26 @@ const codeMessage = {
 };
 const defaultheaders = { 'Content-Type': 'application/json;charset=UTF-8' };
 const errorHandler = (error) => {
-    const { response = {} } = error;
-    const errortext = codeMessage[response.status] || response.statusText;
+    const {
+        response = {},
+        data = { msg: '服务器发生错误，请检查服务器。' },
+    } = error;
     const { status, url } = response;
-
-    notification.error({
-        message: `请求错误 ${status}: ${url}`,
-        description: errortext,
-    });
+    const errortext = data.msg || codeMessage[status] || response.statusText;
+    if (status === 401) {
+        history.push('/login');
+    }
+    console.log('object :>> ', `请求错误 ${status}: ${url}`);
+    throw Error('请求失效');
+    // notification.error({
+    //     message: `请求错误 ${status}: ${url}`,
+    //     description: errortext,
+    // });
     return {};
 };
 const defaultOptions = {
     timeout: 6000,
-    prefix: apiPreff,
+    prefix: proxyPreff + apiPreff,
     credentials: 'include',
     errorHandler: errorHandler,
 };
@@ -67,6 +74,13 @@ export default function UseRequset(
             'Authorization',
         );
     }
+    // -------------------------   produce API config    ------------------------------
+    const body = window.document.getElementsByTagName('body');
+    const envApiPrefix = body[0].getAttribute('envApiPrefix');
+    if (envApiPrefix) {
+        options.prefix = envApiPrefix + apiPreff;
+    }
+    // -------------------------   produce API config    ------------------------------
     options.loading ? showLoading() : '';
     if (options.method.toUpperCase() === 'GET' && options.params) {
         return getFn(url, options);

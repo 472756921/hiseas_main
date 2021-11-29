@@ -1,6 +1,5 @@
-import { baseInterface as baseInterface } from './mods';
+import { baseInterface } from './mods';
 
-declare const window;
-window.baseInterfaceGloab = baseInterface;
-
-export { baseInterface };
+(window as any).API = {
+    baseInterface,
+};

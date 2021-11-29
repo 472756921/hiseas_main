@@ -1,12 +1,14 @@
-import { baseInterface } from '@/api';
-const { login } = baseInterface;
+import fetch from '@/fetch';
 
-export function getlogin(data: baseInterface.login.login.Params): any {
-    return login.login.request({
-        data: data,
-        loading: true,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-        },
+const getlogin = (params: any) => {
+    return window.API.baseInterface.login.login.request(params);
+};
+
+const getUserAc = (params) => {
+    return fetch('/user/getUserPerms', {
+        method: 'GET',
+        params: params,
     });
-}
+};
+
+export { getlogin, getUserAc };
